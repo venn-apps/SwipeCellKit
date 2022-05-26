@@ -129,7 +129,10 @@ open class SwipeCollectionViewCell: UICollectionViewCell {
     }
     
     private func manageGestureRecognizers() {
-        guard delegate != nil else { return }
+        guard delegate != nil else {
+            gestureRecognizers?.removeAll()
+            return
+        }
         collectionView?.panGestureRecognizer.removeTarget(self, action: nil)
         collectionView?.panGestureRecognizer.addTarget(self, action: #selector(handleCollectionPan(gesture:)))
     }
