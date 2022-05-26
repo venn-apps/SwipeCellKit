@@ -16,7 +16,11 @@ import UIKit
  */
 open class SwipeCollectionViewCell: UICollectionViewCell {
     /// The object that acts as the delegate of the `SwipeCollectionViewCell`.
-    public weak var delegate: SwipeCollectionViewCellDelegate?
+    public weak var delegate: SwipeCollectionViewCellDelegate? {
+        didSet {
+            manageGestureRecognizers()
+        }
+    }
     
     var state = SwipeState.center
     var actionsView: SwipeActionsView?
@@ -118,11 +122,16 @@ open class SwipeCollectionViewCell: UICollectionViewCell {
                 
                 swipeController.scrollView = scrollView
                 
-                collectionView.panGestureRecognizer.removeTarget(self, action: nil)
-                collectionView.panGestureRecognizer.addTarget(self, action: #selector(handleCollectionPan(gesture:)))
+                manageGestureRecognizers()
                 return
             }
         }
+    }
+    
+    private func manageGestureRecognizers() {
+        guard delegate != nil else { return }
+        collectionView?.panGestureRecognizer.removeTarget(self, action: nil)
+        collectionView?.panGestureRecognizer.addTarget(self, action: #selector(handleCollectionPan(gesture:)))
     }
     
     /// :nodoc:
